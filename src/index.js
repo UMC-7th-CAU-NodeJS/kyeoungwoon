@@ -7,7 +7,11 @@ import {
   handleStoreAdd,
   handleUserSignUp,
   handleAddReviewToStore,
-} from "./controllers/user.controller.js";
+  handleGetUserCurrentAreaMission,
+  handleGetUserPoint,
+  handleSetUserMissionSuccess,
+  handleGetStoreReview,
+} from "./controllers/index.controller.js";
 
 dotenv.config();
 
@@ -26,12 +30,20 @@ v1.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-v1.post("/users/register", handleUserSignUp);
+v1.post("/user/register", handleUserSignUp);
+// week 5 mission
+v1.post("/store", handleStoreAdd);
+v1.post("/review", handleAddReviewToStore);
+v1.post("/mission", handleAddMission);
+v1.post("/mission/start", handleAddMissionToUser);
 
-v1.post("/stores", handleStoreAdd);
-v1.post("/reviews", handleAddReviewToStore);
-v1.post("/missions", handleAddMission);
-v1.post("/missions/start", handleAddMissionToUser);
+// week 3 API 작성분
+v1.get("/mission", handleGetUserCurrentAreaMission);
+v1.get("/user/point", handleGetUserPoint); // 10/27 23:10 ~ 23:21
+v1.post("/mission/end", handleSetUserMissionSuccess); // 10/27 23:21 ~ 23:45
+v1.get("/review/store/:store_id", handleGetStoreReview); // 10/27 23:45 ~ 23:59
+
+// test : 10/28 00:00 ~ 00:21 (21분)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
