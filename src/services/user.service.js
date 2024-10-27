@@ -1,6 +1,10 @@
-import { responseFromUser } from "./user.dto";
+import { responseFromUser } from "../dtos/user.dto.js";
 import {
+  addReviewToStore,
+  addStore,
   addUser,
+  addMission,
+  addMissionToUser,
   getUser,
   getUserPreferencesByUserId,
   setPreference,
@@ -11,22 +15,55 @@ export const userSignUp = async (data) => {
     email: data.email,
     name: data.name,
     gender: data.gender,
-    birth: data.birth,
+    birthdate: data.birthdate,
     address: data.address,
-    detailAddress: data.detailAddress,
-    phoneNumber: data.phoneNumber,
-  });
+  }); // returns result.insertId
 
   if (joinUserId === null) {
     throw new Error("이미 존재하는 이메일입니다.");
   }
 
-  for (const preference of data.preferences) {
-    await setPreference(joinUserId, preference);
-  }
+  for (const prefers of data.prefer_food) {
+    console.log("[LOG] 25 prefers: ", prefers);
+    if (prefers.selected === true) {
+      await setPreference(joinUserId, prefers.prefer_id);
+    }
+  } // DB insert ...
 
-  const user = await getUser(joinUserId);
+  const user = await getUser(joinUserId); // 이게 JSON 배열을 반환함
   const preferences = await getUserPreferencesByUserId(joinUserId);
+  // user_id에 따른 preference id 배열을 반환
+
+  console.log("[LOG] 28 user, prefs: ", user, preferences);
 
   return responseFromUser({ user, preferences });
+  // 이걸 다시 user 랑 preference_id를 주어준다.. ?
+  /*
+  {"result":{"email":"test@example.com","name":"엘빈","preferCategory":["한식","중식","치킨"]}}
+  그냥 이렇게 가입 결과 삼아서 반환해주는 것 같음
+  */
+};
+
+// 현재는 데이터 insert 및 검증을 repository에서 처리하고 있음
+// 입력단에서의 데이터 검증은 service 에서 처리하는게 나아보임
+// ex) not null 이 아닌 data는 ""라도 넣어주기
+
+export const serviceAddStore = async (data) => {
+  const store_id = await addStore(data);
+  return store_id;
+};
+
+export const serviceAddReviewToStore = async (data) => {
+  const review_id = await addReviewToStore(data);
+  return review_id;
+};
+
+export const serviceAddMission = async (data) => {
+  const mission_id = await addMission(data);
+  return mission_id;
+};
+
+export const serviceAddMissionToUser = async (data) => {
+  const user_mission_id = await addMissionToUser(data);
+  return user_mission_id;
 };
