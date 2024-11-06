@@ -47,7 +47,7 @@ const handleAddMissionToUser = async (req, res, next) => {
     return res.status(StatusCodes.OK).json({ result: store });
   } catch (err) {
     if (err instanceof NotExistError) {
-      return res
+      return res  
         .status(StatusCodes.NOT_FOUND)
         .json({ result: "사용자가 존재하지 않습니다." });
     }

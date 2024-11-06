@@ -1,0 +1,268 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model AlarmType {
+  id                   Int                    @id @default(autoincrement()) @map("alarm_type_id")
+  type                 String                 @db.VarChar(100)
+  createdAt            DateTime               @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt            DateTime               @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  alarms              Alarm[]
+  userAlarmPreferences UserAlarmPreference[]
+
+  @@map("alarm_type")
+}
+
+model Area {
+  id             Int           @id @default(autoincrement()) @map("area_id")
+  name           String        @db.VarChar(30)
+  address        String        @db.VarChar(100)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt      DateTime      @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  stores         Store[]
+  missions       Mission[]
+  areaMissions   AreaMission[]
+  userAreaCounts UserAreaCount[]
+
+  @@map("area")
+}
+
+model Prefer {
+  id          Int          @id @default(autoincrement()) @map("prefer_id")
+  name        String       @db.VarChar(30)
+  createdAt   DateTime     @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt   DateTime     @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  userPrefers UserPrefer[]
+
+  @@map("prefer")
+}
+
+model Store {
+  id        Int       @id @default(autoincrement()) @map("store_id")
+  areaId    Int       @map("area_id")
+  name      String    @db.VarChar(100)
+  address   String    @db.VarChar(100)
+  type      String    @db.VarChar(30)
+  createdAt DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  area      Area      @relation(fields: [areaId], references: [id])
+  missions  Mission[]
+  reviews   Review[]
+
+  @@map("store")
+}
+
+model Mission {
+  id           Int           @id @default(autoincrement()) @map("mission_id")
+  name         String        @db.VarChar(30)
+  content      String        @db.VarChar(200)
+  reward       Int
+  storeId      Int          @map("store_id")
+  areaId       Int?         @map("area_id")
+  createdAt    DateTime     @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt    DateTime     @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  store        Store        @relation(fields: [storeId], references: [id])
+  area         Area?        @relation(fields: [areaId], references: [id])
+  areaMissions AreaMission[]
+  userMissions UserMission[]
+
+  @@map("mission")
+}
+
+model AreaMission {
+  id        Int      @id @default(autoincrement()) @map("area_mission_id")
+  areaId    Int      @map("area_id")
+  missionId Int      @map("mission_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  area      Area     @relation(fields: [areaId], references: [id])
+  mission   Mission  @relation(fields: [missionId], references: [id])
+
+  @@map("area_mission")
+}
+
+model Term {
+  id         Int        @id @default(autoincrement()) @map("term_id")
+  title      String     @db.VarChar(100)
+  content    String     @db.VarChar(2048)
+  isRequired Boolean    @map("is_required") @db.TinyInt
+  createdAt  DateTime   @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt  DateTime   @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  userTerms  UserTerm[]
+
+  @@map("term")
+}
+
+model User {
+  id                    Int                    @id @default(autoincrement()) @map("user_id")
+  email                 String                 @unique @db.VarChar(30)
+  name                  String                 @db.VarChar(30)
+  birthdate            DateTime               @db.Date
+  address              String                 @db.VarChar(100)
+  nickname             String?                @db.VarChar(30)
+  age                  Int?
+  gender               String                 @db.VarChar(30)
+  phoneNumber          String?                @map("phone_number") @db.VarChar(30)
+  isPhoneNumberVerified Boolean?              @map("is_phone_number_verified") @db.TinyInt
+  point                Int?
+  createdAt            DateTime               @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt            DateTime               @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  inactiveAt           DateTime?              @map("inactive_at") @db.DateTime(6)
+  terminatedAt         DateTime?              @map("terminated_at") @db.DateTime(6)
+  alarms               Alarm[]
+  personalInquiries    PersonalInquiry[]
+  pointLogs            PointLog[]
+  reviews              Review[]
+  userAlarmPreferences UserAlarmPreference[]
+  userAreaCounts       UserAreaCount[]
+  userMissions         UserMission[]
+  userPrefers          UserPrefer[]
+  userTerms            UserTerm[]
+
+  @@map("user")
+}
+
+model Alarm {
+  id           Int       @id @default(autoincrement()) @map("alarm_id")
+  userId       Int       @map("user_id")
+  alarmTypeId  Int       @map("alarm_type_id")
+  content      String    @db.VarChar(1024)
+  raisedAt     DateTime  @map("raised_at") @db.DateTime(6)
+  checkedAt    DateTime? @map("checked_at") @db.DateTime(6)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  user         User      @relation(fields: [userId], references: [id])
+  alarmType    AlarmType @relation(fields: [alarmTypeId], references: [id])
+
+  @@map("alarm")
+}
+
+model PersonalInquiry {
+  id          Int       @id @default(autoincrement()) @map("personal_inquiry_id")
+  userId      Int       @map("user_id")
+  title       String    @db.VarChar(100)
+  content     String    @db.VarChar(2048)
+  photoUrl1   String?   @map("photo_url_1") @db.VarChar(200)
+  photoUrl2   String?   @map("photo_url_2") @db.VarChar(200)
+  photoUrl3   String?   @map("photo_url_3") @db.VarChar(200)
+  status      Int
+  raisedDate  DateTime  @map("raised_date") @db.DateTime(6)
+  closedDate  DateTime? @map("closed_date") @db.DateTime(6)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@map("personal_inquiry")
+}
+
+model PointLog {
+  id          Int      @id @default(autoincrement()) @map("point_log_id")
+  userId      Int      @map("user_id")
+  pointChange Int      @map("point_change")
+  changeDate  DateTime @map("change_date") @db.DateTime(6)
+  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@map("point_log")
+}
+
+model Review {
+  id        Int      @id @default(autoincrement()) @map("review_id")
+  content   String   @db.VarChar(100)
+  star      Int
+  userId    Int      @map("user_id")
+  storeId   Int      @map("store_id")
+  photoUrl1 String?  @map("photo_url_1") @db.VarChar(200)
+  photoUrl2 String?  @map("photo_url_2") @db.VarChar(200)
+  photoUrl3 String?  @map("photo_url_3") @db.VarChar(200)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  user      User     @relation(fields: [userId], references: [id])
+  store     Store    @relation(fields: [storeId], references: [id])
+
+  @@map("review")
+}
+
+model UserAlarmPreference {
+  id         Int       @id @default(autoincrement()) @map("user_alarm_preference_id")
+  userId     Int       @map("user_id")
+  alarmTypeId Int      @map("alarm_type_id")
+  status     Boolean   @db.TinyInt
+  createdAt  DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  user       User      @relation(fields: [userId], references: [id])
+  alarmType  AlarmType @relation(fields: [alarmTypeId], references: [id])
+
+  @@map("user_alarm_preference")
+}
+
+model UserAreaCount {
+  id        Int      @id @default(autoincrement()) @map("user_area_count_id")
+  userId    Int      @map("user_id")
+  areaId    Int      @map("area_id")
+  count     Int?
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  user      User     @relation(fields: [userId], references: [id])
+  area      Area     @relation(fields: [areaId], references: [id])
+
+  @@map("user_area_count")
+}
+
+model UserMission {
+  id         Int      @id @default(autoincrement()) @map("user_mission_id")
+  userId     Int      @map("user_id")
+  missionId  Int      @map("mission_id")
+  status     Status
+  finishedAt DateTime? @map("finished_at") @db.DateTime(6)
+  createdAt  DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  user       User     @relation(fields: [userId], references: [id])
+  mission    Mission  @relation(fields: [missionId], references: [id])
+
+  @@map("user_mission")
+}
+
+model UserPrefer {
+  id        Int      @id @default(autoincrement()) @map("user_prefer_id")
+  preferId  Int      @map("prefer_id")
+  userId    Int      @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  prefer    Prefer   @relation(fields: [preferId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("user_prefer")
+}
+
+model UserTerm {
+  id        Int      @id @default(autoincrement()) @map("user_term_id")
+  termId    Int      @map("term_id")
+  userId    Int      @map("user_id")
+  isAgreed  Boolean  @map("is_agreed") @db.TinyInt
+  date      DateTime @db.DateTime
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  term      Term     @relation(fields: [termId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("user_term")
+}
+
+enum Status {
+  in_progress
+  success
+  fail
+}
