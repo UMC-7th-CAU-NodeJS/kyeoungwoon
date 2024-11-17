@@ -6,7 +6,11 @@ export {
   handleSetUserMissionSuccess,
 };
 
-import { NotExistError } from "../errors.js";
+import {
+  NotExistError,
+  BadRequestError,
+  AlreadyExistError,
+} from "../errors.js";
 import { StatusCodes } from "http-status-codes";
 import {
   serviceAddMission,
@@ -24,17 +28,18 @@ import {
 const handleAddMission = async (req, res, next) => {
   try {
     const store = await serviceAddMission(bodyToAddMission(req.body));
-    return res.status(StatusCodes.OK).json({ result: store });
+    return res.status(StatusCodes.OK).success({ result: store });
   } catch (err) {
     if (err instanceof NotExistError) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ result: "가게가 존재하지 않습니다." });
+      throw new NotExistError("가게가 존재하지 않습니다.", req.body);
+      // return res
+      //   .status(StatusCodes.NOT_FOUND)
+      //   .json({ result: "가게가 존재하지 않습니다." });
     }
     console.log("[LOG_ERR : handleAddMission]", err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ result: "미션 추가에 실패했습니다." });
+      .error({ reason: "미션 추가에 실패했습니다." });
   }
 };
 
@@ -44,17 +49,19 @@ const handleAddMissionToUser = async (req, res, next) => {
     const store = await serviceAddMissionToUser(
       bodyParseUserMissionID(req.body)
     );
-    return res.status(StatusCodes.OK).json({ result: store });
+    return res.status(StatusCodes.OK).success({ result: store });
   } catch (err) {
     if (err instanceof NotExistError) {
-      return res  
-        .status(StatusCodes.NOT_FOUND)
-        .json({ result: "사용자가 존재하지 않습니다." });
+      console.log("sdjkfhasklfkldsjflkasjdflksdajlf", req.body);
+      throw new NotExistError("사용자가 존재하지 않습니다.", req.body);
+      // return res
+      //   .status(StatusCodes.NOT_FOUND)
+      //   .json({ result: "사용자가 존재하지 않습니다." });
     }
     console.log("[LOG_ERR : handleAddMissionToUser]", err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ result: "미션 추가에 실패했습니다." });
+      .error({ reason: "미션 추가에 실패했습니다." });
   }
 };
 
@@ -65,43 +72,46 @@ const handleGetUserCurrentAreaMission = async (req, res, next) => {
       area_id: req.body.area_id,
     });
 
-    return res.status(StatusCodes.OK).json({ result: missionList });
+    return res.status(StatusCodes.OK).success({ result: missionList });
   } catch (err) {
     if (err instanceof NotExistError) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ result: "존재하지 않는 지역입니다." });
+      throw new NotExistError("존재하지 않는 지역입니다.", req.body);
+      // return res
+      //   .status(StatusCodes.NOT_FOUND)
+      //   .json({ result: "존재하지 않는 지역입니다." });
     }
     console.log("[LOG_ERR : handleGetCurrentAreaMission]", err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ result: "미션 조회에 실패했습니다." });
+      .error({ reason: "미션 조회에 실패했습니다." });
   }
 };
 
 const handleGetUserMissionByStatus = async (req, res, next) => {
   try {
     if (req.body.status !== "in_progress" && req.body.status !== "success") {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ result: "잘못된 status 값입니다." });
+      throw new BadRequestError("잘못된 status 값입니다.", req.body);
+      // return res
+      //   .status(StatusCodes.BAD_REQUEST)
+      //   .json({ result: "잘못된 status 값입니다." });
     } // 도대체 DTO가 왜 필요한걸까 ..
     const missionList = await serviceGetUserMissionByStatus({
       status: req.body.status, // 그렇다고 이걸 DTO로 빼기엔 ...
       user_id: bodyToUserId(req.body), // 이것도 정말 억지스러운 ..
     });
 
-    return res.status(StatusCodes.OK).json({ result: missionList });
+    return res.status(StatusCodes.OK).success({ result: missionList });
   } catch (err) {
     if (err instanceof NotExistError) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ result: "존재하지 않는 지역입니다." });
+      throw new NotExistError("존재하지 않는 지역입니다.", req.body);
+      // return res
+      //   .status(StatusCodes.NOT_FOUND)
+      //   .json({ result: "존재하지 않는 지역입니다." });
     }
     console.log("[LOG_ERR : handleGetCurrentAreaMission]", err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ result: "미션 조회에 실패했습니다." });
+      .error({ reason: "미션 조회에 실패했습니다." });
   }
 };
 
@@ -111,16 +121,17 @@ const handleSetUserMissionSuccess = async (req, res, next) => {
     const result = await serviceSetUserMissionSuccess(
       bodyParseUserMissionID(req.body)
     );
-    return res.status(StatusCodes.OK).json({ result: result });
+    return res.status(StatusCodes.OK).success({ result: result });
   } catch (err) {
     if (err instanceof NotExistError) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ result: "미션을 완료할 수 없습니다." });
+      throw new NotExistError("존재하지 않는 미션입니다.", req.body);
+      // return res
+      //   .status(StatusCodes.NOT_FOUND)
+      //   .json({ result: "미션을 완료할 수 없습니다." });
     }
     console.log("[LOG_ERR : handleRequestMissionComplete]", err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ result: "미션 완료에 실패했습니다." });
+      .error({ reason: "미션 완료에 실패했습니다." });
   }
 };

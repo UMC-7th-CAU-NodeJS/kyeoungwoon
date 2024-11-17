@@ -8,6 +8,7 @@ export {
 export {
   serviceAddReviewToStore,
   serviceGetStoreReview,
+  serviceGetUserReview,
 } from "./review.service.js";
 export { serviceAddStore } from "./store.service.js";
 export { userSignUp, serviceGetUserPoint } from "./user.service.js";

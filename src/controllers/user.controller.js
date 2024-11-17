@@ -10,22 +10,23 @@ const handleUserSignUp = async (req, res, next) => {
   console.log("[LOG_handleUserSignUp] body:", req.body); // 값이 잘 들어오나 확인하기 위한 테스트용
 
   const user = await userSignUp(bodyToUser(req.body));
-  res.status(StatusCodes.OK).json({ result: user });
+  res.status(StatusCodes.OK).success({ result: user });
 };
 
 const handleGetUserPoint = async (req, res, next) => {
   try {
     const userPoint = await serviceGetUserPoint(req.body.user_id);
-    return res.status(StatusCodes.OK).json({ result: userPoint });
+    return res.status(StatusCodes.OK).success({ result: userPoint });
   } catch (err) {
     if (err instanceof NotExistError) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ result: "사용자가 존재하지 않습니다." });
+      throw new NotExistError("사용자가 존재하지 않습니다.", req.body);
+      // return res
+      //   .status(StatusCodes.NOT_FOUND)
+      //   .json({ result: "사용자가 존재하지 않습니다." });
     }
     console.log("[LOG_ERR : handleGetUserPoint]", err);
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ result: "포인트 조회에 실패했습니다." });
+      .error({ result: "포인트 조회에 실패했습니다." });
   }
 };

@@ -7,7 +7,11 @@ export {
   getUserMissionByStatus,
   setUserMissionSuccess,
 } from "./mission.repository.js";
-export { addReviewToStore, getStoreReview } from "./review.repository.js";
+export {
+  addReviewToStore,
+  getStoreReview,
+  getUserReview,
+} from "./review.repository.js";
 export { addStore } from "./store.repository.js";
 export {
   addUser,

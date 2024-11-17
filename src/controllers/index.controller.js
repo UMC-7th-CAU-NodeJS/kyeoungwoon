@@ -8,6 +8,7 @@ export {
 export {
   handleAddReviewToStore,
   handleGetStoreReview,
+  handleGetUserReview,
 } from "./review.controller.js";
 export { handleStoreAdd } from "./store.controller.js";
 export { handleUserSignUp, handleGetUserPoint } from "./user.controller.js";
