@@ -69,6 +69,7 @@ const v1 = express.Router();
 app.use("/api/v1", v1);
 
 v1.get("/", (req, res) => {
+  // #swagger.ignore = true
   res.send("Hello World!");
 });
 
@@ -90,6 +91,7 @@ v1.get("/review", handleGetUserReview);
 // test : 10/28 00:00 ~ 00:21 (21분)
 
 app.get("/", (req, res) => {
+  // #swagger.ignore = true
   const ret = {
     hello: "world",
   };
@@ -120,10 +122,106 @@ app.get("/openapi.json", async (req, res, next) => {
   const routes = ["./src/index.js"];
   const doc = {
     info: {
-      title: "UMC 7th",
-      description: "UMC 7th Node.js 테스트 프로젝트입니다.",
+      title: "UMC 7th Node.js 하늘 / 박경운",
+      description: "UMC 7th Node.js 하늘 / 박경운 의 워크북 프로젝트 입니다.",
+      contact: {
+        name: "박경운",
+        email: "saveearth1@cau.ac.kr",
+        url: "https://github.com/kyeoungwoon",
+      },
+      license: {
+        name: "MIT",
+        url: "https://opensource.org/licenses/MIT",
+      },
     },
-    host: "localhost:3000",
+    // 서버 정보
+    servers: [
+      {
+        url: "http://localhost:3000",
+        description: "개발 서버",
+      },
+      {
+        url: "https://heehee.fakeurl",
+        description: "운영 서버",
+      },
+    ],
+
+    // 보안 설정
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    components: {
+      // 인증 스키마
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+
+      // 공통 응답 스키마
+      schemas: {
+        Success: {
+          type: "object",
+          properties: {
+            resultType: {
+              type: "string",
+              description: "결과 타입",
+            },
+            success: {
+              type: "object",
+              description: "성공 데이터",
+            },
+          },
+        },
+        Error: {
+          type: "object",
+          properties: {
+            errorCode: {
+              type: "string",
+              description: "에러 코드",
+            },
+            reason: {
+              type: "string",
+              description: "에러 사유",
+            },
+            data: {
+              type: "object",
+              description: "에러 데이터",
+            },
+          },
+        },
+      },
+    },
+
+    // 태그 분류
+    tags: [
+      {
+        name: "User",
+        description: "사용자 관련 API",
+      },
+      {
+        name: "Store",
+        description: "가게 관련 API",
+      },
+      {
+        name: "Mission",
+        description: "미션 관련 API",
+      },
+      {
+        name: "Review",
+        description: "리뷰 관련 API",
+      },
+    ],
+
+    // 외부 문서
+    externalDocs: {
+      description: "GitHub Repository",
+      url: "https://github.com/UMC-7th-CAU-NodeJS/umc-7-kyeoungwoon",
+    },
   };
 
   const result = await swaggerAutogen(options)(outputFile, routes, doc);
