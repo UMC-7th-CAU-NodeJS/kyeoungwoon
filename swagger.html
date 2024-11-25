@@ -1,0 +1,26 @@
+
+  <!DOCTYPE html>
+  <html>
+  <head>
+      <title>UMC 7th Node.js 하늘 / 박경운</title>
+      <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@4/swagger-ui.css">
+  </head>
+  <body>
+      <div id="swagger-ui"></div>
+      <script src="https://unpkg.com/swagger-ui-dist@4/swagger-ui-bundle.js"></script>
+      <script>
+          window.onload = function() {
+              SwaggerUIBundle({
+                  spec: {"openapi":"3.0.0","info":{"title":"UMC 7th Node.js 하늘 / 박경운","description":"UMC 7th Node.js 하늘 / 박경운 의 워크북 프로젝트 입니다.","version":"1.0.0","contact":{"name":"박경운","email":"saveearth1@cau.ac.kr","url":"https://github.com/kyeoungwoon"}},"servers":[{"url":"http://localhost:3000","description":"개발 서버"}],"paths":{},"components":{},"tags":[]},
+                  dom_id: '#swagger-ui',
+                  deepLinking: true,
+                  presets: [
+                      SwaggerUIBundle.presets.apis,
+                      SwaggerUIBundle.SwaggerUIStandalonePreset
+                  ]
+              });
+          }
+      </script>
+  </body>
+  </html>
+  

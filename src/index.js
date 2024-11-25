@@ -116,9 +116,10 @@ app.get("/openapi.json", async (req, res, next) => {
   const options = {
     openapi: "3.0.0",
     disableLogs: true,
-    writeOutputFile: false,
+    writeOutputFile: true,
   };
-  const outputFile = "/dev/null"; // 파일 출력은 사용하지 않습니다.
+
+  const outputFile = "./src/swagger-output.json"; // 파일 출력은 사용하지 않습니다.
   const routes = ["./src/index.js"];
   const doc = {
     info: {
