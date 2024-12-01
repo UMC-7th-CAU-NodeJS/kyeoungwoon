@@ -1,14 +1,11 @@
-export { userSignUp, serviceGetUserPoint };
-
-import { responseFromUser } from "../dtos/index.dto.js";
 import {
   addUser,
   getUser,
   getUserPreferencesByUserId,
   setPreference,
-} from "../repositories/index.repository.js";
+} from "../repositories/user.repository.js";
 
-const userSignUp = async (data) => {
+export const userSignUp = async (data) => {
   const joinUserId = await addUser({
     email: data.email,
     name: data.name,
@@ -46,7 +43,7 @@ const userSignUp = async (data) => {
 // 입력단에서의 데이터 검증은 service 에서 처리하는게 나아보임
 // ex) not null 이 아닌 data는 ""라도 넣어주기
 
-const serviceGetUserPoint = async (data) => {
+export const serviceGetUserPoint = async (data) => {
   const user = await getUser(data);
   const user_point = user.point;
 

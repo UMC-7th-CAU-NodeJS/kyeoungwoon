@@ -1,17 +1,14 @@
-export { handleAddReviewToStore, handleGetStoreReview, handleGetUserReview };
-
 import { NotExistError } from "../errors.js";
 import { StatusCodes } from "http-status-codes";
-
 import {
   serviceAddReviewToStore,
   serviceGetStoreReview,
   serviceGetUserReview,
-} from "../services/index.service.js";
-import { bodyToReview } from "../dtos/index.dto.js";
+} from "../services/review.service.js";
+import { bodyToReview } from "../dtos/review.dto.js";
 
 // #2 가게에 리뷰 추가하기 : 가게 존재여부 검증 필요
-const handleAddReviewToStore = async (req, res, next) => {
+export const handleAddReviewToStore = async (req, res, next) => {
   // handleAddReviewToStore
   // handleAddReviewToStore
   /*
@@ -144,7 +141,7 @@ const handleAddReviewToStore = async (req, res, next) => {
   }
 };
 
-const handleGetStoreReview = async (req, res, next) => {
+export const handleGetStoreReview = async (req, res, next) => {
   // handleGetStoreReview
   /*
     #swagger.tags = ['Review']
@@ -232,7 +229,7 @@ const handleGetStoreReview = async (req, res, next) => {
   }
 };
 
-const handleGetUserReview = async (req, res, next) => {
+export const handleGetUserReview = async (req, res, next) => {
   // handleGetUserReview
   /*
     #swagger.tags = ['Review']

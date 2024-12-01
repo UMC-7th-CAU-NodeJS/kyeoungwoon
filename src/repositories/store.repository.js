@@ -1,11 +1,9 @@
-export { addStore };
-
 import { PrismaClient } from "@prisma/client";
 import { AlreadyExistError } from "../errors.js";
 const prisma = new PrismaClient();
 
 // 1. 특정 지역에 가게 추가하기 : 이미 존재하는 가게인지 확인 (상호명과 주소로 확인))
-const addStore = async (data) => {
+export const addStore = async (data) => {
   try {
     // 가게가 이미 존재하는지 확인
     const confirm = await prisma.store.findFirst({

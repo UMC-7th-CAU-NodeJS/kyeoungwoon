@@ -1,6 +1,4 @@
-export { bodyToAddMission, bodyParseUserMissionID };
-
-const bodyToAddMission = (body) => {
+export const bodyToAddMission = (body) => {
   const ret = {
     name: body.name,
     content: body.content,
@@ -12,7 +10,7 @@ const bodyToAddMission = (body) => {
   return ret;
 };
 
-const bodyParseUserMissionID = (body) => {
+export const bodyParseUserMissionID = (body) => {
   const ret = {
     user_id: body.user_id,
     mission_id: body.mission_id,

@@ -1,6 +1,4 @@
-export { bodyToUser, responseFromUser, bodyToUserId };
-
-const bodyToUser = (body) => {
+export const bodyToUser = (body) => {
   const ret = {
     email: body.email,
     name: body.name,
@@ -14,7 +12,7 @@ const bodyToUser = (body) => {
   return ret;
 };
 
-const responseFromUser = ({ user, preferences }) => {
+export const responseFromUser = ({ user, preferences }) => {
   const ret = {
     result: {
       email: user.email,
@@ -29,7 +27,7 @@ const responseFromUser = ({ user, preferences }) => {
   return ret;
 };
 
-const bodyToUserId = (body) => {
+export const bodyToUserId = (body) => {
   const ret = {
     user_id: body.user_id,
   };

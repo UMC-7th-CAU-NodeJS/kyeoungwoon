@@ -1,22 +1,20 @@
-export { serviceAddReviewToStore, serviceGetStoreReview, serviceGetUserReview };
-
 import {
   addReviewToStore,
   getStoreReview,
   getUserReview,
-} from "../repositories/index.repository.js";
+} from "../repositories/review.repository.js";
 
-const serviceAddReviewToStore = async (data) => {
+export const serviceAddReviewToStore = async (data) => {
   const review_id = await addReviewToStore(data);
   return review_id;
 };
 
-const serviceGetStoreReview = async (data) => {
+export const serviceGetStoreReview = async (data) => {
   const review_list = await getStoreReview(data);
   return review_list;
 };
 
-const serviceGetUserReview = async (data) => {
+export const serviceGetUserReview = async (data) => {
   const review_list = await getUserReview(data);
   return review_list;
 };

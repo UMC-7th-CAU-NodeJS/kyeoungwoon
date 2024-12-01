@@ -1,15 +1,7 @@
-export {
-  addMission,
-  addMissionToUser,
-  getCurrentAreaMission,
-  getUserMissionByStatus,
-  setUserMissionSuccess,
-};
-
 import { prisma } from "../db.config.js";
 import { NotExistError } from "../errors.js";
 
-const isExistStore = async (storeId) => {
+export const isExistStore = async (storeId) => {
   const store = await prisma.store.findUnique({
     where: {
       id: storeId,
@@ -21,7 +13,7 @@ const isExistStore = async (storeId) => {
   // SELECT EXISTS(SELECT 1 FROM store WHERE store_id = ?) as isExistStore
 };
 
-const isUserExist = async (userId) => {
+export const isUserExist = async (userId) => {
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -33,7 +25,7 @@ const isUserExist = async (userId) => {
   // SELECT EXISTS(SELECT 1 FROM user WHERE user_id = ?) as isUserExist
 };
 
-const addMission = async (data) => {
+export const addMission = async (data) => {
   try {
     if (!(await isExistStore(data.store_id))) {
       throw new NotExistError(
@@ -64,7 +56,7 @@ const addMission = async (data) => {
   }
 };
 
-const addMissionToUser = async (data) => {
+export const addMissionToUser = async (data) => {
   try {
     if (!(await isUserExist(data.user_id))) {
       throw new NotExistError(
@@ -108,7 +100,7 @@ const addMissionToUser = async (data) => {
   }
 };
 
-const getCurrentAreaMission = async (data) => {
+export const getCurrentAreaMission = async (data) => {
   try {
     const area = await prisma.area.findUnique({
       where: {
@@ -140,7 +132,7 @@ const getCurrentAreaMission = async (data) => {
   }
 };
 
-const getUserMissionByStatus = async (data) => {
+export const getUserMissionByStatus = async (data) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -173,7 +165,7 @@ const getUserMissionByStatus = async (data) => {
   }
 };
 
-const setUserMissionSuccess = async (data) => {
+export const setUserMissionSuccess = async (data) => {
   try {
     const user = await prisma.user.findUnique({
       where: {

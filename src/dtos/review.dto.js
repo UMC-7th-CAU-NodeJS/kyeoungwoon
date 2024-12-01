@@ -1,7 +1,4 @@
-//
-export { bodyToReview };
-
-const bodyToReview = (body) => {
+export const bodyToReview = (body) => {
   const ret = {
     store_id: body.store_id,
     user_id: body.user_id,

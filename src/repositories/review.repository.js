@@ -1,9 +1,7 @@
-export { addReviewToStore, getStoreReview, getUserReview };
-
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-const isExistStore = async (storeId) => {
+export const isExistStore = async (storeId) => {
   const store = await prisma.store.findUnique({
     where: {
       id: storeId,
@@ -14,7 +12,7 @@ const isExistStore = async (storeId) => {
   // SELECT EXISTS(SELECT 1 FROM store WHERE store_id = ?) as isExistStore
 };
 
-const addReviewToStore = async (data) => {
+export const addReviewToStore = async (data) => {
   try {
     // 리뷰를 등록할 가게가 존재하는지 확인
     if (!(await isExistStore(data.store_id))) {
@@ -48,7 +46,7 @@ const addReviewToStore = async (data) => {
   }
 };
 
-const getStoreReview = async (data) => {
+export const getStoreReview = async (data) => {
   try {
     if (!(await isExistStore(data.store_id))) {
       throw new NotExistError(
@@ -70,7 +68,7 @@ const getStoreReview = async (data) => {
   }
 };
 
-const getUserReview = async (data) => {
+export const getUserReview = async (data) => {
   try {
     const review_list = await prisma.review.findMany({
       where: {

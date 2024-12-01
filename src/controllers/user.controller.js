@@ -1,11 +1,9 @@
-export { handleUserSignUp, handleGetUserPoint };
-
 import { StatusCodes } from "http-status-codes";
-import { bodyToUser, bodyToUserId } from "../dtos/index.dto.js";
-import { userSignUp, serviceGetUserPoint } from "../services/index.service.js";
 import { NotExistError } from "../errors.js";
+import { serviceGetUserPoint, userSignUp } from "../services/user.service.js";
+import { bodyToUser } from "../dtos/user.dto.js";
 
-const handleUserSignUp = async (req, res, next) => {
+export const handleUserSignUp = async (req, res, next) => {
   // handleStoreAdd
   /*
     #swagger.tags = ['Store']
@@ -136,7 +134,7 @@ const handleUserSignUp = async (req, res, next) => {
   res.status(StatusCodes.OK).success({ result: user });
 };
 
-const handleGetUserPoint = async (req, res, next) => {
+export const handleGetUserPoint = async (req, res, next) => {
   // handleGetUserPoint
   /*
     #swagger.tags = ['User']

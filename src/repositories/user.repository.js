@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // User 데이터 삽입
-const addUser = async (data) => {
+export const addUser = async (data) => {
   try {
     const existingUser = await prisma.user.findFirst({
       where: {
@@ -39,7 +39,7 @@ const addUser = async (data) => {
 };
 
 // 사용자 정보 얻기
-const getUser = async (userId) => {
+export const getUser = async (userId) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -63,7 +63,7 @@ const getUser = async (userId) => {
 };
 
 // 음식 선호 카테고리 매핑
-const setPreference = async (userId, foodCategoryId) => {
+export const setPreference = async (userId, foodCategoryId) => {
   try {
     await prisma.userPrefer.create({
       data: {
@@ -89,7 +89,7 @@ const setPreference = async (userId, foodCategoryId) => {
 };
 
 // 사용자 선호 카테고리 반환
-const getUserPreferencesByUserId = async (userId) => {
+export const getUserPreferencesByUserId = async (userId) => {
   try {
     const preferences = await prisma.userPrefer.findMany({
       where: {

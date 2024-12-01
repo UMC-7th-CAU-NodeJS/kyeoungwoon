@@ -1,31 +1,20 @@
-export {
-  handleAddMission,
-  handleAddMissionToUser,
-  handleGetUserCurrentAreaMission,
-  handleGetUserMissionByStatus,
-  handleSetUserMissionSuccess,
-};
-
-import {
-  NotExistError,
-  BadRequestError,
-  AlreadyExistError,
-} from "../errors.js";
 import { StatusCodes } from "http-status-codes";
+import { NotExistError } from "../errors.js";
 import {
   serviceAddMission,
   serviceAddMissionToUser,
   serviceGetCurrentAreaMission,
+  serviceGetUserMissionByStatus,
   serviceSetUserMissionSuccess,
-} from "../services/index.service.js";
+} from "../services/mission.service.js";
 import {
-  bodyToAddMission,
   bodyParseUserMissionID,
-  bodyToUserId,
-} from "../dtos/index.dto.js";
+  bodyToAddMission,
+} from "../dtos/mission.dto.js";
+import { bodyToUserId } from "../dtos/user.dto.js";
 
 // #3 가게에 미션 추가하기
-const handleAddMission = async (req, res, next) => {
+export const handleAddMission = async (req, res, next) => {
   // handleAddMission
   /*
     #swagger.tags = ['Mission']
@@ -92,7 +81,7 @@ const handleAddMission = async (req, res, next) => {
 };
 
 // #4 도전 중인 미션에 추가하기 : 미션 도전중인지 검증 필요
-const handleAddMissionToUser = async (req, res, next) => {
+export const handleAddMissionToUser = async (req, res, next) => {
   // handleAddMissionToUser
   /*
     #swagger.tags = ['Mission']
@@ -146,7 +135,6 @@ const handleAddMissionToUser = async (req, res, next) => {
     return res.status(StatusCodes.OK).success({ result: store });
   } catch (err) {
     if (err instanceof NotExistError) {
-      console.log("sdjkfhasklfkldsjflkasjdflksdajlf", req.body);
       throw new NotExistError("사용자가 존재하지 않습니다.", req.body);
       // return res
       //   .status(StatusCodes.NOT_FOUND)
@@ -159,7 +147,7 @@ const handleAddMissionToUser = async (req, res, next) => {
   }
 };
 
-const handleGetUserCurrentAreaMission = async (req, res, next) => {
+export const handleGetUserCurrentAreaMission = async (req, res, next) => {
   // handleGetUserCurrentAreaMission
   /*
     #swagger.tags = ['Mission']
@@ -232,7 +220,7 @@ const handleGetUserCurrentAreaMission = async (req, res, next) => {
   }
 };
 
-const handleGetUserMissionByStatus = async (req, res, next) => {
+export const handleGetUserMissionByStatus = async (req, res, next) => {
   // handleGetUserMissionByStatus
   /*
     #swagger.tags = ['Mission']
@@ -311,7 +299,7 @@ const handleGetUserMissionByStatus = async (req, res, next) => {
 };
 
 // TODO : 이미 미션이 완료된 상태인 경우 처리 필요
-const handleSetUserMissionSuccess = async (req, res, next) => {
+export const handleSetUserMissionSuccess = async (req, res, next) => {
   // handleSetUserMissionSuccess
   /*
     #swagger.tags = ['Mission']

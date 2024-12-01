@@ -1,8 +1,6 @@
-export { serviceAddStore };
+import { addStore } from "../repositories/store.repository.js";
 
-import { addStore } from "../repositories/index.repository.js";
-
-const serviceAddStore = async (data) => {
+export const serviceAddStore = async (data) => {
   const store_id = await addStore(data);
   return store_id;
 };

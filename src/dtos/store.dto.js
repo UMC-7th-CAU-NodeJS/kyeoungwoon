@@ -1,6 +1,4 @@
-export { bodyToStore };
-
-const bodyToStore = (body) => {
+export const bodyToStore = (body) => {
   const ret = {
     name: body.name,
     address: body.address,
