@@ -1,5 +1,3 @@
-export { addUser, getUser, setPreference, getUserPreferencesByUserId };
-
 import { NotExistError } from "../errors.js";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();

@@ -1,21 +1,25 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import {
-  handleAddMission,
-  handleAddMissionToUser,
-  handleStoreAdd,
-  handleUserSignUp,
-  handleAddReviewToStore,
-  handleGetUserCurrentAreaMission,
-  handleGetUserPoint,
-  handleSetUserMissionSuccess,
-  handleGetStoreReview,
-  handleGetUserReview,
-} from "./controllers/index.controller.js";
 
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
+import {
+  handleGetUserPoint,
+  handleUserSignUp,
+} from "./controllers/user.controller.js";
+import { handleStoreAdd } from "./controllers/store.controller.js";
+import {
+  handleAddReviewToStore,
+  handleGetStoreReview,
+  handleGetUserReview,
+} from "./controllers/review.controller.js";
+import {
+  handleAddMission,
+  handleAddMissionToUser,
+  handleGetUserCurrentAreaMission,
+  handleSetUserMissionSuccess,
+} from "./controllers/mission.controller.js";
 
 dotenv.config();
 
